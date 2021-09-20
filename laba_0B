@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <list>
+#include <map>
+
+
+using namespace std;
+
+string string_parser(string a)
+{
+	int leng = a.length();
+	for (int i = 0; i < leng; i++)
+		if (!isdigit(a[i]) && !isalpha(a[i]))
+			a[i] = ' ';
+	return a;
+};
+
+int main(int args, char** argv)
+{
+	ifstream input(argv[1]);
+	if (!input.is_open())	return -1;
+	map <string, int> table;
+	int total_ctr = 0;
+	while (!input.eof())
+	{
+		string str = "", s = "";
+		getline(input,str);
+		str = string_parser(str);
+		stringstream ss(str);
+		for (; ss >> s; total_ctr++)
+			if (table[s])
+				table[s] += 1;
+			else
+				table[s] = 1;
+	}
+	list <pair<int, string>> sorted_table;
+	map <string, int> ::iterator map_it = table.begin();
+	for (; map_it != table.end(); map_it++)
+	{
+		pair<int, string> para = {map_it->second, map_it->first};
+		sorted_table.push_back(para);
+	}
+	sorted_table.sort();
+	sorted_table.reverse();
+	ofstream out(argv[2]);
+	list <pair<int,string>> ::iterator it = sorted_table.begin();
+	for (; it != sorted_table.end(); it++)
+		out << it->second << "," << it->first << "," << double(it->first) / total_ctr << "\n";
+	out.close();
+	return 0;
+}

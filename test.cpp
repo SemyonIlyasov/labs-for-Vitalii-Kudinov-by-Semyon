@@ -7,7 +7,7 @@ class TestHashTable : public::testing::Test
 {
 protected:
     HashTable table;
-
+    
     void SetUp() override
     {
         table.insert("Max", { 18, 50 });
@@ -23,7 +23,14 @@ protected:
 
     void TearDown() override {}
 };
+TEST_F(TestHashTable, MoveConstructor) {
 
+    HashTable t1(table);
+    HashTable t2(std::move(table));
+    //t1.output();
+    //t2.output();
+    ASSERT_TRUE(t2 == t1);
+ }
 TEST_F(TestHashTable, TestContains)
 {
     ASSERT_TRUE(table.contains("Max"));

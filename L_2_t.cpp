@@ -117,8 +117,7 @@ public:
 		alive = b.alive;
 		capacity = b.capacity;
 		train = new wagon[b.buf_size];
-		for (int i = 0; i < b.buf_size; i++)
-			train[i] = b.train[i];
+		train = b.train;
 	};
 
 	HashTable(HashTable&& b) noexcept											
@@ -131,7 +130,6 @@ public:
 		b.train = nullptr;
 		b.buf_size = 0;
 		b.capacity = 0;
-		
 	};
 
 
@@ -167,7 +165,13 @@ public:
 		buf_size = b.buf_size;
 		alive = b.alive;
 		capacity = b.capacity;
+		// delete train
+		b.buf_size = 0;
+		b.alive = 0;
+		b.capacity = 0;
+
 		return *this;
+
 	};
 
 
@@ -295,9 +299,9 @@ public:
 		if (alive == 0) return 1;
 		return 0;
 	};
-	friend bool operator==(const HashTable& a, const HashTable& b);			// õç
+	friend bool operator==(const HashTable& a, const HashTable& b);		
 
-	friend bool operator!=(const HashTable& a, const HashTable& b);			// õç
+	friend bool operator!=(const HashTable& a, const HashTable& b);			
 };
 
 bool operator==(const HashTable& a, const HashTable& b)
@@ -306,15 +310,15 @@ bool operator==(const HashTable& a, const HashTable& b)
 	{
 		for (int i = 0; i < a.buf_size; i++)
 			if (a.train[i].passengers != b.train[i].passengers)
-				return 0;
-		return 1;
+				return false;
+		return true;
 	}
-	return 0;
+	return false;
 }
 bool operator!=(const HashTable& a, const HashTable& b)
 {
 	if (a == b)
-		return 0;
-	return 1;
+		return false;
+	return true;
 }
 
